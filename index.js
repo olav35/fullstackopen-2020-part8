@@ -80,11 +80,13 @@ let books = [
 
 const typeDefs = gql`
   type Query {
+    bookCount: Int!
   }
 `
 
 const resolvers = {
   Query: {
+    bookCount: _ => books.length
   }
 }
 
