@@ -107,10 +107,10 @@ const resolvers = {
     bookCount: _ => books.length,
     authorCount: _ => authors.length,
     allBooks: _ => books,
-    allAuthors: _ => authors.map(author => {
-      const bookCount = books.filter(book => book.author === author.name).length
-      return { ...author, bookCount }
-    })
+    allAuthors: _ => authors
+  },
+  Author: {
+    bookCount: (author) => books.filter(book => book.author === author.name).length
   }
 }
 
