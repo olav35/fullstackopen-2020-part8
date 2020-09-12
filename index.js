@@ -1,6 +1,8 @@
 const { ApolloServer, gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 
+const getAuthorByName = (name) => authors.find(author => author.name === name)
+
 const createAuthor = (name, born) => ({ name, born, id: uuid() })
 const createBook = (title, published, author, genres) => ({ title, published, author, genres, id: uuid() })
 
@@ -137,7 +139,7 @@ const resolvers = {
   },
   Mutation: {
     addBook: (_, args) => {
-      let author = authors.find(author => author.name === args.author)
+      let author = getAuthorByName(args.author)
       if(!author){
         author = createAuthor(args.author)
         authors = authors.concat(author)
