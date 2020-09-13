@@ -9,52 +9,49 @@ const Authors = () => {
   const [ editAuthor ] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [ { query: ALL_AUTHORS } ]
   })
-  const [ name, setName ] = useState('')
+
   const [ birthYear, setBirthYear] = useState('')
 
   const handleEditAuthor = (event) => {
     event.preventDefault()
+    const name = event.target.author.value
 
     editAuthor({ variables: { name, birthYear: Number(birthYear) } })
 
-    setName('')
     setBirthYear('')
   }
 
-  return (
+  return result.loading ? <div>Loading...</div> : (
     <div>
       <h2>authors</h2>
-      {
-        result.loading ? <div>Loading...</div> : (
-          <table>
-            <tbody>
-              <tr>
-                <th></th>
-                <th>
-                  born
-                </th>
-                <th>
-                  books
-                </th>
-              </tr>
-              {result.data.allAuthors.map(a =>
-                <tr key={a.name}>
-                  <td>{a.name}</td>
-                  <td>{a.born}</td>
-                  <td>{a.bookCount}</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        )
-      }
+      <table>
+        <tbody>
+          <tr>
+            <th></th>
+            <th>
+              born
+            </th>
+            <th>
+              books
+            </th>
+          </tr>
+          {result.data.allAuthors.map(a =>
+            <tr key={a.name}>
+              <td>{a.name}</td>
+              <td>{a.born}</td>
+              <td>{a.bookCount}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
       <h2>Set birthyear</h2>
       <form onSubmit={handleEditAuthor}>
-        name
-        <input
-          onChange={(event) => setName(event.target.value)}
-          value={name}
-        />
+        author
+        <select name='author'>
+          {
+            result.data.allAuthors.map(({name}) => <option value={name}>{name}</option>)
+          }
+        </select>
         <br/>
         born
         <input
