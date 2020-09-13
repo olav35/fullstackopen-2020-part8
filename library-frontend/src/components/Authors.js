@@ -1,10 +1,7 @@
   
 import React from 'react'
 
-const Authors = (props) => {
-  if (!props.show) {
-    return null
-  }
+const Authors = () => {
   const authors = []
 
   return (
