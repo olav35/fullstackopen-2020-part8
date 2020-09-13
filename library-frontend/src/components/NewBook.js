@@ -1,16 +1,6 @@
 import React, { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
-
-const ADD_BOOK = gql`
-  mutation ($title: String!, $author: String!, $published: Int!, $genres: [String!]!){
-    addBook (
-      title: $title
-      author: $author
-      published: $published
-      genres: $genres
-    ) { id }
-  }
-`
+import { useMutation } from '@apollo/client'
+import { ADD_BOOK } from '../mutations'
 
 const NewBook = () => {
   const [ addBook ] = useMutation(ADD_BOOK)
