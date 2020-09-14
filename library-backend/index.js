@@ -1,12 +1,10 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const config = require('./utils/config')
 const mongoose = require('mongoose')
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.set('useCreateIndex', true)
 const Book = require('./models/book')
 const Author = require('./models/author')
-
-const getAuthorByName = (name) => authors.find(author => author.name === name)
 
 const typeDefs = gql`
   type Book {
@@ -63,7 +61,13 @@ const resolvers = {
       let author = await Author.findOne({ name: args.author })
       if(!author){
         author = new Author({ name: args.author })
-        await author.save()
+        try {
+          await author.save()
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args
+          })
+        }
       }
       const book = new Book({
         title: args.title,
@@ -71,7 +75,14 @@ const resolvers = {
         author: author._id,
         genres: args.genres
       })
-      return book.save()
+      try {
+        await book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
+      return book
     },
     editAuthor: async (_, args) => {
       const author = await Author.findOne({ name: args.name })
