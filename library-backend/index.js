@@ -2,6 +2,7 @@ const { ApolloServer, gql } = require('apollo-server')
 const config = require('./utils/config')
 const mongoose = require('mongoose')
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.set('useCreateIndex', true)
 const Book = require('./models/book')
 const Author = require('./models/author')
 
