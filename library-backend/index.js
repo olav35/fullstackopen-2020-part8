@@ -3,6 +3,7 @@ const { v1: uuid } = require('uuid')
 const config = require('./utils/config')
 const mongoose = require('mongoose')
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+const Book = require('./models/book')
 
 const getAuthorByName = (name) => authors.find(author => author.name === name)
 
@@ -51,7 +52,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    bookCount: _ => books.length,
+    bookCount: _ => Book.collection.countDocuments(),
     authorCount: _ => authors.length,
     allBooks: (_, args) => books.filter(book => {
       if(args.author && args.author !== book.author) {
