@@ -56,7 +56,7 @@ const resolvers = {
     bookCount: _ => Book.collection.countDocuments(),
     authorCount: _ => Author.collection.countDocuments(),
     allBooks: _ => Book.find({}),
-    allAuthors: _ => authors
+    allAuthors: _ => Author.find({})
   },
   Mutation: {
     addBook: (_, args) => {
