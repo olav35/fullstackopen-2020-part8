@@ -52,7 +52,10 @@ const resolvers = {
   Query: {
     bookCount: _ => Book.collection.countDocuments(),
     authorCount: _ => Author.collection.countDocuments(),
-    allBooks: _ => Book.find({}).populate({ path: 'author' }),
+    allBooks: (_, args) => {
+      const query = args.genre ? { genres: { $in: [ args.genre ] } } : {}
+      return Book.find(query).populate({ path: 'author '})
+    },
     allAuthors: _ => Author.find({})
   },
   Mutation: {
