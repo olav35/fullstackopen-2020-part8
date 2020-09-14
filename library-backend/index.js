@@ -12,7 +12,7 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: String!
     genres: [String!]!
   }
@@ -52,7 +52,7 @@ const resolvers = {
   Query: {
     bookCount: _ => Book.collection.countDocuments(),
     authorCount: _ => Author.collection.countDocuments(),
-    allBooks: _ => Book.find({}),
+    allBooks: _ => Book.find({}).populate({ path: 'author' }),
     allAuthors: _ => Author.find({})
   },
   Mutation: {
