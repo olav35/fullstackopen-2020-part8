@@ -18,7 +18,9 @@
   "homepage": "https://github.com/olav35/fullstackopen-2020-part8#readme",
   "dependencies": {
     "apollo-server": "^2.17.0",
-    "graphql": "^15.3.0"
+    "graphql": "^15.3.0",
+    "mongoose": "^5.10.5",
+    "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
