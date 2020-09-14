@@ -55,17 +55,7 @@ const resolvers = {
   Query: {
     bookCount: _ => Book.collection.countDocuments(),
     authorCount: _ => Author.collection.countDocuments(),
-    allBooks: (_, args) => books.filter(book => {
-      if(args.author && args.author !== book.author) {
-        return false
-      }
-
-      if(args.genre && !book.genres.includes(args.genre)) {
-        return false
-      }
-
-      return true
-    }),
+    allBooks: _ => Book.find({}),
     allAuthors: _ => authors
   },
   Mutation: {
