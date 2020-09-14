@@ -1,5 +1,4 @@
 const { ApolloServer, gql } = require('apollo-server')
-const { v1: uuid } = require('uuid')
 const config = require('./utils/config')
 const mongoose = require('mongoose')
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -8,14 +7,11 @@ const Author = require('./models/author')
 
 const getAuthorByName = (name) => authors.find(author => author.name === name)
 
-const createAuthor = (name, born) => ({ name, born, id: uuid() })
-const createBook = (title, published, author, genres) => ({ title, published, author, genres, id: uuid() })
-
 const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: Author!
+    author: String!
     id: String!
     genres: [String!]!
   }
@@ -59,15 +55,19 @@ const resolvers = {
     allAuthors: _ => Author.find({})
   },
   Mutation: {
-    addBook: (_, args) => {
-      let author = getAuthorByName(args.author)
+    addBook: async (_, args) => {
+      let author = await Author.findOne({ name: args.author })
       if(!author){
-        author = createAuthor(args.author)
-        authors = authors.concat(author)
+        author = new Author({ name: args.author })
+        await author.save()
       }
-      const book = createBook(args.title, args.published, args.author, args.genres)
-      books = books.concat(book)
-      return book
+      const book = new Book({
+        title: args.title,
+        published: args.published,
+        author: author._id,
+        genres: args.genres
+      })
+      return book.save()
     },
     editAuthor: (_, args) => {
       const author = getAuthorByName(args.name)
