@@ -1,5 +1,8 @@
 const { ApolloServer, gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
+const config = require('./utils/config')
+const mongoose = require('mongoose')
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const getAuthorByName = (name) => authors.find(author => author.name === name)
 
