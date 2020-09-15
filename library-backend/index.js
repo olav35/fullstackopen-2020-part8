@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.set('useCreateIndex', true)
 const Book = require('./models/book')
+const User = require('./models/user')
 const Author = require('./models/author')
 
 const typeDefs = gql`
@@ -111,6 +112,20 @@ const resolvers = {
 
       author.born = args.setBornTo
       return author.save()
+    },
+    createUser: async (_, args) => {
+      const user = new User({
+        username: args.username,
+        favoriteGenre: args.favoriteGenre
+      })
+      try {
+        await user.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
+      return user
     }
   },
   Author: {
