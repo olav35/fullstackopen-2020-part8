@@ -7,6 +7,7 @@ mongoose.set('useCreateIndex', true)
 const Book = require('./models/book')
 const User = require('./models/user')
 const Author = require('./models/author')
+const { JWT_SECRET } = require('./utils/config')
 
 const typeDefs = gql`
   type User {
@@ -69,6 +70,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
+    me: (root, args, context) => context.currentUser,
     bookCount: _ => Book.collection.countDocuments(),
     authorCount: _ => Author.collection.countDocuments(),
     allBooks: (_, args) => {
@@ -150,6 +152,16 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => {
+    const auth = req ? req.headers.authorization : null
+    console.log(auth)
+    if(auth && auth.toLowerCase().startsWith('bearer ')) {
+      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
+      console.log(decodedToken)
+      const currentUser = await User.findById(decodedToken.id)
+      return { currentUser }
+    }
+  }
 })
 
 server.listen().then(({ url }) => {
