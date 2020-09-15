@@ -96,12 +96,14 @@ const resolvers = {
           })
         }
       }
+
       const book = new Book({
         title: args.title,
         published: args.published,
-        author: author._id,
+        author: author,
         genres: args.genres
       })
+
       try {
         await book.save()
       } catch (error) {
@@ -109,6 +111,8 @@ const resolvers = {
           invalidArgs: args
         })
       }
+
+      await book.populate('author')
       return book
     },
     editAuthor: async (_, args, context) => {
