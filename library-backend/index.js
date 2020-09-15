@@ -80,7 +80,11 @@ const resolvers = {
     allAuthors: _ => Author.find({})
   },
   Mutation: {
-    addBook: async (_, args) => {
+    addBook: async (_, args, context) => {
+      if(!context.currentUser) {
+        throw new UserInputError('not logged in')
+      }
+
       let author = await Author.findOne({ name: args.author })
       if(!author){
         author = new Author({ name: args.author })
@@ -107,7 +111,11 @@ const resolvers = {
       }
       return book
     },
-    editAuthor: async (_, args) => {
+    editAuthor: async (_, args, context) => {
+      if(!context.currentUser) {
+        throw new UserInputError('not logged in')
+      }
+
       const author = await Author.findOne({ name: args.name })
       if(!author) {
         return null
@@ -154,10 +162,8 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null
-    console.log(auth)
     if(auth && auth.toLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
-      console.log(decodedToken)
       const currentUser = await User.findById(decodedToken.id)
       return { currentUser }
     }
