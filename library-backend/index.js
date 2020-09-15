@@ -1,6 +1,7 @@
 const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const config = require('./utils/config')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 mongoose.set('useCreateIndex', true)
 const Book = require('./models/book')
@@ -126,6 +127,19 @@ const resolvers = {
         })
       }
       return user
+    },
+    login: async (_, args) => {
+      const user = await User.findOne({ username: args.username })
+      if(!user || args.password !== 'passord') {
+        throw new UserInputError('invalid credentials')
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id
+      }
+
+      return { value: jwt.sign(userForToken, config.JWT_SECRET) }
     }
   },
   Author: {
