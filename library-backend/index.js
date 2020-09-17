@@ -168,7 +168,7 @@ const resolvers = {
     }
   },
   Author: {
-    bookCount: (author) => books.filter(book => book.author === author.name).length
+    bookCount: author => Book.find({ author }).countDocuments()
   }
 }
 
