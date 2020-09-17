@@ -49,7 +49,7 @@ const Authors = () => {
         author
         <select name='author'>
           {
-            result.data.allAuthors.map(({name}) => <option value={name}>{name}</option>)
+            result.data.allAuthors.map(({name}) => <option key={name} value={name}>{name}</option>)
           }
         </select>
         <br/>
