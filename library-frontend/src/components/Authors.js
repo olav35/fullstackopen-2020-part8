@@ -10,7 +10,7 @@ const Authors = () => {
     refetchQueries: [ { query: ALL_AUTHORS } ]
   })
 
-  const [ birthYear, setBirthYear] = useState('')
+  const [ birthYear, setBirthYear ] = useState('')
 
   const handleEditAuthor = (event) => {
     event.preventDefault()
