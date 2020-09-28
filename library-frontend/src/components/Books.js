@@ -3,7 +3,9 @@ import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
 const Books = () => {
-  const result = useQuery(ALL_BOOKS)
+  const result = useQuery(ALL_BOOKS, {
+    refetchQueries: [ { query: ALL_BOOKS } ]
+  })
 
   return (
     <div>
